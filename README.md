@@ -2,13 +2,13 @@
 
 Atividade Prática de Inteligência Artificial — UFPI, período 2026.2
 
-**Aplicação:** https://jpedro-doc.github.io/ia-ufpi-algoritmo-genetico/
-**Código-fonte:** https://github.com/jpedro-doc/ia-ufpi-algoritmo-genetico
-**Testes no navegador:** https://jpedro-doc.github.io/ia-ufpi-algoritmo-genetico/testes.html
+**Aplicação:** https://enricotx.github.io/ia-ufpi-algoritmo-genetico/
+**Código-fonte:** https://github.com/enricotx/ia-ufpi-algoritmo-genetico
+**Testes no navegador:** https://enricotx.github.io/ia-ufpi-algoritmo-genetico/testes.html
 
 ## Autores
-- João Pedro <!-- nome completo --> — matrícula <!-- preencher -->
-- Enrico <!-- nome completo --> — matrícula <!-- preencher -->
+- João Pedro de Sousa Moura — 20249022038
+- Enrico da Rocha Santos Teixeira — 20239046134
 
 ## Problema
 Um campus tem orçamento limitado e uma lista de projetos de melhoria, cada um com nome, custo em reais e benefício em pontos. O objetivo é escolher projetos (cada um no máximo uma vez) que maximizem a soma dos benefícios sem ultrapassar o orçamento. Os benefícios são aditivos e não há dependência entre projetos. É uma mochila 0/1 resolvida com algoritmo genético. A aplicação começa com os quatro projetos da seção 6.1 e permite editar, adicionar e remover projetos, mantendo entre 4 e 15.
