@@ -1,83 +1,172 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Algoritmo Genético — Seleção de projetos do campus</title>
+  <title>Algoritmo Genético — Seleção de Projetos</title>
   <link rel="stylesheet" href="css/estilo.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script type="module" src="js/ui.js"></script>
 </head>
 <body>
   <header class="cabecalho">
-    <p class="disciplina">Inteligência Artificial — UFPI 2026.2</p>
-    <h1>Atividade Prática: Algoritmo Genético</h1>
-    <p class="meta">
-      Autores: [Nome Completo], [Nome Completo] ·
-      <a href="https://github.com/enricotx/ia-ufpi-algoritmo-genetico" target="_blank" rel="noopener">Repositório no GitHub</a>
-    </p>
+    <div class="disciplina">Inteligência Artificial — UFPI 2026.2</div>
+    <div class="linha">
+      <h1>Atividade Prática: Algoritmo Genético — seleção de projetos do campus</h1>
+      <span class="autores">Autores: João Pedro, Enrico</span>
+      <a class="link-repo" href="https://github.com/jpedro-doc/ia-ufpi-algoritmo-genetico" target="_blank" rel="noopener">Repositório no GitHub ↗</a>
+    </div>
   </header>
 
   <main class="layout">
-    <!-- Coluna de configuração -->
-    <section>
-      <div class="painel" id="painel-projetos">
-        <h2>Projetos</h2>
-        <!-- TODO: tabela editável (nome, custo em R$, benefício) + Adicionar/Remover (4 a 15 itens) -->
+    <!-- ======================= CONFIGURAÇÃO ======================= -->
+    <section class="painel" aria-labelledby="titulo-config">
+      <h2 id="titulo-config">Configuração</h2>
+      <div id="resumo-erros" class="resumo-erros" role="alert"></div>
+
+      <h3>Projetos (4 a 15)</h3>
+      <table class="tabela-projetos">
+        <thead><tr><th>Gene</th><th class="col-nome">Nome</th><th class="col-num">Custo (R$)</th><th class="col-num">Benefício</th><th></th></tr></thead>
+        <tbody id="corpo-projetos"></tbody>
+      </table>
+      <div id="erro-projetos" class="erro"></div>
+      <div class="acoes-linha">
+        <button type="button" id="btn-adicionar" class="pequeno">+ Adicionar projeto</button>
+        <button type="button" id="btn-restaurar" class="pequeno">Restaurar valores iniciais (seção 6)</button>
       </div>
 
-      <div class="painel" id="painel-parametros">
-        <h2>Parâmetros</h2>
-        <!-- TODO: orçamento, população, gerações, cruzamento %, mutação %, torneio, elite, semente -->
+      <h3>Parâmetros</h3>
+      <div class="campo">
+        <label for="orcamento">Orçamento disponível (R$)</label>
+        <input type="text" inputmode="decimal" id="orcamento" autocomplete="off">
+        <div class="dica">≥ 0, até 2 casas decimais, sem separador de milhar (ex.: 7000,00)</div>
+        <div class="erro" id="erro-orcamento"></div>
       </div>
-
-      <div class="painel">
-        <div class="controles">
-          <button id="btn-executar" class="primario" disabled>Executar</button>
-          <button id="btn-pausar" disabled>Pausar</button>
-          <button id="btn-avancar" disabled>Avançar uma geração</button>
-          <button id="btn-reiniciar" disabled>Reiniciar</button>
+      <div class="grade-2">
+        <div class="campo">
+          <label for="tamanhoPopulacao">Tamanho da população</label>
+          <input type="text" inputmode="numeric" id="tamanhoPopulacao" autocomplete="off">
+          <div class="dica">inteiro, 2 a 1000 indivíduos</div>
+          <div class="erro" id="erro-tamanhoPopulacao"></div>
+        </div>
+        <div class="campo">
+          <label for="numeroGeracoes">Número de gerações</label>
+          <input type="text" inputmode="numeric" id="numeroGeracoes" autocomplete="off">
+          <div class="dica">inteiro, 1 a 10000 (a inicial é a 0)</div>
+          <div class="erro" id="erro-numeroGeracoes"></div>
+        </div>
+        <div class="campo">
+          <label for="taxaCruzamento">Taxa de cruzamento (%)</label>
+          <input type="text" inputmode="decimal" id="taxaCruzamento" autocomplete="off">
+          <div class="dica">0 a 100, por par de pais</div>
+          <div class="erro" id="erro-taxaCruzamento"></div>
+        </div>
+        <div class="campo">
+          <label for="taxaMutacao">Taxa de mutação (%)</label>
+          <input type="text" inputmode="decimal" id="taxaMutacao" autocomplete="off">
+          <div class="dica">0 a 100, por gene</div>
+          <div class="erro" id="erro-taxaMutacao"></div>
+        </div>
+        <div class="campo">
+          <label for="tamanhoTorneio">Tamanho do torneio</label>
+          <input type="text" inputmode="numeric" id="tamanhoTorneio" autocomplete="off">
+          <div class="dica">inteiro, 2 até a população (candidatos)</div>
+          <div class="erro" id="erro-tamanhoTorneio"></div>
+        </div>
+        <div class="campo">
+          <label for="elite">Indivíduos de elite</label>
+          <input type="text" inputmode="numeric" id="elite" autocomplete="off">
+          <div class="dica">inteiro, 0 até população − 1</div>
+          <div class="erro" id="erro-elite"></div>
         </div>
       </div>
+      <div class="campo">
+        <label for="semente">Semente aleatória</label>
+        <input type="text" inputmode="numeric" id="semente" autocomplete="off">
+        <div class="dica">inteiro de 0 a 4294967295; mesma semente → mesma execução</div>
+        <div class="erro" id="erro-semente"></div>
+      </div>
+
+      <div class="botoes">
+        <button type="button" id="btn-executar" class="primario">Executar</button>
+        <button type="button" id="btn-pausar">Pausar</button>
+        <button type="button" id="btn-avancar">Avançar uma geração</button>
+        <button type="button" id="btn-reiniciar">Reiniciar</button>
+      </div>
+      <label class="velocidade">Intervalo entre gerações
+        <input type="range" id="intervalo" min="0" max="1500" step="50" value="300">
+        <span id="intervalo-valor" class="mono">300 ms</span>
+      </label>
     </section>
 
-    <!-- Coluna de resultados -->
-    <section>
-      <div class="status" id="status">Em construção</div>
+    <!-- ======================= RESULTADOS ======================= -->
+    <div class="coluna">
+      <div id="status" class="status" data-estado="pronto" role="status" aria-live="polite">Pronto para executar</div>
 
-      <div class="metricas" id="metricas">
-        <div class="metrica"><div class="rotulo">Geração atual</div><div class="valor" id="m-geracao">—</div></div>
-        <div class="metrica"><div class="rotulo">Melhor aptidão da geração</div><div class="valor" id="m-melhor">—</div></div>
-        <div class="metrica"><div class="rotulo">Aptidão média</div><div class="valor" id="m-media">—</div></div>
-        <div class="metrica"><div class="rotulo">Melhor acumulado</div><div class="valor" id="m-acumulado">ainda não calculado</div></div>
+      <div class="cartoes">
+        <div class="cartao"><div class="rotulo">Geração atual</div><div class="valor" id="m-geracao"></div></div>
+        <div class="cartao"><div class="rotulo">Melhor aptidão da geração</div><div class="valor" id="m-melhor-geracao"></div></div>
+        <div class="cartao"><div class="rotulo">Aptidão média da população</div><div class="valor" id="m-media"></div></div>
+        <div class="cartao destaque"><div class="rotulo">Melhor acumulado</div><div class="valor" id="m-melhor-acumulado"></div></div>
       </div>
 
-      <div class="painel" id="painel-solucao" style="margin-top:16px">
-        <h2>Melhor solução encontrada</h2>
-        <!-- TODO: cromossomo, projetos escolhidos, custo total, benefício total, saldo do orçamento -->
-      </div>
+      <section class="painel" aria-labelledby="titulo-melhor">
+        <h2 id="titulo-melhor">Melhor solução encontrada na execução</h2>
+        <dl class="melhor-solucao" id="melhor-solucao"></dl>
+      </section>
 
-      <div class="painel" id="painel-populacao">
-        <h2>População atual</h2>
-        <!-- TODO: índice, cromossomo, custo, aptidão, marca de elite -->
-      </div>
+      <section class="painel" aria-labelledby="titulo-anim">
+        <h2 id="titulo-anim">Animação das operações</h2>
+        <div class="anim-controles">
+          <label>Geração <span id="anim-geracao" class="mono">—</span>, par
+            <select id="anim-par"></select></label>
+          <button type="button" id="btn-animar" class="pequeno">▶ Animar par</button>
+          <button type="button" id="btn-anim-parar" class="pequeno">■ Parar</button>
+          <label class="velocidade">Etapa
+            <input type="range" id="anim-duracao" min="300" max="3000" step="100" value="1200">
+            <span id="anim-duracao-valor" class="mono">1,2 s</span></label>
+        </div>
+        <svg id="anim-palco" class="anim-palco" viewBox="0 0 760 300" role="img" aria-label="Animação do par selecionado"></svg>
+        <div id="anim-legenda" class="anim-legenda" aria-live="polite">Avance uma geração para ver os pais, o corte, a troca de segmentos, as mutações e a reparação.</div>
+      </section>
 
-      <div class="painel" id="painel-historico">
-        <h2>Histórico por geração</h2>
-        <!-- TODO: gráfico (Chart.js) + tabela, começando na geração 0 -->
-      </div>
+      <section class="painel" aria-labelledby="titulo-hist">
+        <h2 id="titulo-hist">Histórico por geração</h2>
+        <div class="grafico"><canvas id="grafico-evolucao" aria-label="Gráfico da evolução da aptidão por geração"></canvas></div>
+        <h3>Tabela</h3>
+        <div class="rolagem">
+          <table class="dados">
+            <thead><tr><th>Geração</th><th>Melhor da geração</th><th>Média</th><th>Melhor acumulado</th><th class="esq">Cromossomo do melhor acumulado</th></tr></thead>
+            <tbody id="corpo-historico"></tbody>
+          </table>
+        </div>
+      </section>
 
-      <div class="painel" id="painel-logs">
-        <h2>Etapas da execução</h2>
-        <!-- TODO: um <details> por geração: pais, corte, filhos, mutações, reparações, elite -->
-      </div>
-    </section>
+      <section class="painel" aria-labelledby="titulo-pop">
+        <h2 id="titulo-pop">População atual</h2>
+        <div class="rolagem">
+          <table class="dados">
+            <thead><tr><th>Índice</th><th class="esq">Cromossomo</th><th>Custo</th><th>Aptidão</th><th class="esq">Origem</th></tr></thead>
+            <tbody id="corpo-populacao"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="painel logs" aria-labelledby="titulo-logs">
+        <h2 id="titulo-logs">Log da execução</h2>
+        <div class="acoes-linha">
+          <button type="button" id="btn-copiar-log" class="pequeno">Copiar log</button>
+          <span id="copiar-status" class="dica"></span>
+        </div>
+        <div id="lista-logs" class="lista"></div>
+      </section>
+    </div>
   </main>
 
   <footer class="rodape">
-    Código-fonte: <a href="https://github.com/enricotx/ia-ufpi-algoritmo-genetico">github.com/enricotx/ia-ufpi-algoritmo-genetico</a>
-    · <a href="testes.html">Testes de validação</a>
+    Código-fonte: <a href="https://github.com/jpedro-doc/ia-ufpi-algoritmo-genetico" target="_blank" rel="noopener">github.com/jpedro-doc/ia-ufpi-algoritmo-genetico</a>
+    · <a href="testes.html">Testes de validação (seção 6)</a>
+    · Outros trabalhos do grupo: Sistema Fuzzy e Colônia de Formigas
   </footer>
-
-  <script type="module" src="js/ui.js"></script>
 </body>
 </html>
