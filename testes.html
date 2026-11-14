@@ -1,24 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Testes de validação — Algoritmo Genético</title>
+  <title>Testes — Algoritmo Genético</title>
   <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
   <header class="cabecalho">
-    <p class="disciplina">Inteligência Artificial — UFPI 2026.2</p>
-    <h1>Testes de validação — Algoritmo Genético</h1>
-    <p class="meta"><a href="index.html">Voltar para a aplicação</a></p>
+    <div class="disciplina">Inteligência Artificial — UFPI 2026.2</div>
+    <div class="linha">
+      <h1>Testes de validação (seção 6 do enunciado)</h1>
+      <a class="link-repo" href="index.html">← Voltar à aplicação</a>
+    </div>
   </header>
-  <main style="padding:16px 24px">
-    <p id="resumo"></p>
-    <table>
-      <thead><tr><th>Teste</th><th>Resultado</th><th>Detalhe</th></tr></thead>
-      <tbody id="resultados"></tbody>
-    </table>
+
+  <main class="coluna" style="padding: 16px 24px;">
+    <div id="resumo" class="status">Rodando testes…</div>
+
+    <section class="painel">
+      <h2>Casos de teste</h2>
+      <p class="dica">Os testes controlados chamam direto as funções determinísticas de <code>js/nucleo.js</code> (corte, genes invertidos e candidatos forçados). As execuções completas usam o gerador Mulberry32 com a semente indicada.</p>
+      <div class="rolagem" style="max-height: none;">
+        <table class="dados testes">
+          <thead><tr><th class="esq">Caso</th><th>Resultado</th><th class="esq">Detalhe da falha</th></tr></thead>
+          <tbody id="corpo-testes"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="painel">
+      <h2>6.5 — Efeito da mutação: 1% × 20% (sementes 1 a 5)</h2>
+      <p class="dica">Demais parâmetros do 6.5: população 20, 50 gerações, cruzamento 80%, torneio 2, elite 1, orçamento R$ 7.000.</p>
+      <div class="rolagem" style="max-height: none;">
+        <table class="dados">
+          <thead><tr><th>Mutação</th><th>Semente</th><th>Melhor final</th><th class="esq">Cromossomo</th><th>Custo</th><th>1ª geração com 12</th><th>Média da pop. na geração 50</th><th>Média da pop. (gerações 0–50)</th></tr></thead>
+          <tbody id="corpo-mutacao"></tbody>
+        </table>
+      </div>
+      <h3>Resumo por taxa</h3>
+      <div class="rolagem" style="max-height: none;">
+        <table class="dados">
+          <thead><tr><th>Mutação</th><th>Média do melhor final</th><th>Execuções que atingiram 12</th><th>Média da 1ª geração com 12</th><th>Média da pop. na geração 50</th><th>Média da pop. (gerações 0–50)</th></tr></thead>
+          <tbody id="corpo-resumo"></tbody>
+        </table>
+      </div>
+    </section>
   </main>
-  <script type="module" src="js/testes.js"></script>
+
+  <footer class="rodape">
+    Código-fonte: <a href="https://github.com/jpedro-doc/ia-ufpi-algoritmo-genetico" target="_blank" rel="noopener">github.com/jpedro-doc/ia-ufpi-algoritmo-genetico</a>
+  </footer>
+
+  <script type="module">
+    import { rodarTodos, mostrar, compararMutacao } from './js/testes.js';
+    import { reais, decimal, numero, percentual } from './js/formato.js';
+
+    const resultados = rodarTodos();
+    mostrar(document.getElementById('corpo-testes'));
+    const falhas = resultados.filter((r) => !r.ok).length;
+    const resumo = document.getElementById('resumo');
+    resumo.textContent = falhas === 0
+      ? `Todos os ${resultados.length} casos passaram.`
+      : `${falhas} de ${resultados.length} casos falharam.`;
+    resumo.dataset.estado = falhas === 0 ? 'concluido' : 'invalido';
+
+    const comp = compararMutacao();
+    document.getElementById('corpo-mutacao').innerHTML = comp.linhas.map((l) => `<tr>
+      <td>${percentual(l.taxa)}</td><td>${l.semente}</td><td>${numero(l.melhorFinal)}</td>
+      <td class="esq mono">${l.cromossomo}</td><td>${reais(l.custo)}</td>
+      <td>${l.primeiraGeracao12 ?? 'não atingiu'}</td><td>${decimal(l.mediaFinal, 2)}</td><td>${decimal(l.mediaDasMedias, 2)}</td></tr>`).join('');
+    document.getElementById('corpo-resumo').innerHTML = comp.resumo.map((r) => `<tr>
+      <td>${percentual(r.taxa)}</td><td>${decimal(r.mediaMelhorFinal, 2)}</td><td>${r.atingiram12} de 5</td>
+      <td>${Number.isNaN(r.mediaPrimeiraGeracao12) ? '—' : decimal(r.mediaPrimeiraGeracao12, 1)}</td>
+      <td>${decimal(r.mediaPopulacaoFinal, 2)}</td><td>${decimal(r.mediaPopulacaoGeral, 2)}</td></tr>`).join('');
+  </script>
 </body>
 </html>
