@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Algoritmo Genético — Seleção de projetos do campus</title>
+  <link rel="stylesheet" href="css/estilo.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="cabecalho">
+    <p class="disciplina">Inteligência Artificial — UFPI 2026.2</p>
+    <h1>Atividade Prática: Algoritmo Genético</h1>
+    <p class="meta">
+      Autores: [Nome Completo], [Nome Completo] ·
+      <a href="https://github.com/enricotx/ia-ufpi-algoritmo-genetico" target="_blank" rel="noopener">Repositório no GitHub</a>
+    </p>
+  </header>
+
+  <main class="layout">
+    <!-- Coluna de configuração -->
+    <section>
+      <div class="painel" id="painel-projetos">
+        <h2>Projetos</h2>
+        <!-- TODO: tabela editável (nome, custo em R$, benefício) + Adicionar/Remover (4 a 15 itens) -->
+      </div>
+
+      <div class="painel" id="painel-parametros">
+        <h2>Parâmetros</h2>
+        <!-- TODO: orçamento, população, gerações, cruzamento %, mutação %, torneio, elite, semente -->
+      </div>
+
+      <div class="painel">
+        <div class="controles">
+          <button id="btn-executar" class="primario" disabled>Executar</button>
+          <button id="btn-pausar" disabled>Pausar</button>
+          <button id="btn-avancar" disabled>Avançar uma geração</button>
+          <button id="btn-reiniciar" disabled>Reiniciar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coluna de resultados -->
+    <section>
+      <div class="status" id="status">Em construção</div>
+
+      <div class="metricas" id="metricas">
+        <div class="metrica"><div class="rotulo">Geração atual</div><div class="valor" id="m-geracao">—</div></div>
+        <div class="metrica"><div class="rotulo">Melhor aptidão da geração</div><div class="valor" id="m-melhor">—</div></div>
+        <div class="metrica"><div class="rotulo">Aptidão média</div><div class="valor" id="m-media">—</div></div>
+        <div class="metrica"><div class="rotulo">Melhor acumulado</div><div class="valor" id="m-acumulado">ainda não calculado</div></div>
+      </div>
+
+      <div class="painel" id="painel-solucao" style="margin-top:16px">
+        <h2>Melhor solução encontrada</h2>
+        <!-- TODO: cromossomo, projetos escolhidos, custo total, benefício total, saldo do orçamento -->
+      </div>
+
+      <div class="painel" id="painel-populacao">
+        <h2>População atual</h2>
+        <!-- TODO: índice, cromossomo, custo, aptidão, marca de elite -->
+      </div>
+
+      <div class="painel" id="painel-historico">
+        <h2>Histórico por geração</h2>
+        <!-- TODO: gráfico (Chart.js) + tabela, começando na geração 0 -->
+      </div>
+
+      <div class="painel" id="painel-logs">
+        <h2>Etapas da execução</h2>
+        <!-- TODO: um <details> por geração: pais, corte, filhos, mutações, reparações, elite -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    Código-fonte: <a href="https://github.com/enricotx/ia-ufpi-algoritmo-genetico">github.com/enricotx/ia-ufpi-algoritmo-genetico</a>
+    · <a href="testes.html">Testes de validação</a>
+  </footer>
+
+  <script type="module" src="js/ui.js"></script>
+</body>
+</html>
